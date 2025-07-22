@@ -123,7 +123,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^downloads/boxes/(?P<username>[\w.@+-]+)/(?P<box_name>[\w.@+-]+)/'
         r'(?P<version>\d+\.\d+\.\d+)/'
-        r'(?P<provider>[\w.@+-]+).box',
+        r'(?P<provider>[\w.@+-]+)/'
+        r'(?P<architecture>[\w.@+-]+).box',
         DownloadBoxView.as_view({'get': 'get'}), name='downloads-box'),
     url(r'^box-metadata/(?P<username>[\w.@+-]+)/(?P<box_name>[\w.@+-]+)/$',
         box_metadata_detail, name='box-metadata'),

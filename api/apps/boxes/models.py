@@ -226,11 +226,12 @@ class BoxVersion(models.Model):
 
 def user_box_upload_path(instance, filename):
     return (
-        'boxes/{owner}/{box_name}/{version}/{provider}.box'.format(
+        'boxes/{owner}/{box_name}/{version}/{provider}/{architecture}.box'.format(
             owner=instance.version.box.owner,
             box_name=instance.version.box.name,
             version=instance.version.version,
-            provider=instance.provider)
+            provider=instance.provider,
+            architecture=instance.architecture)
     )
 
 
@@ -304,9 +305,14 @@ class BoxProvider(models.Model):
         default=EMPTY,
         editable=False,
     )
+    architecture = models.CharField(max_length=100)
+    default_architecture = models.BooleanField(
+        null=False, 
+        default=False,
+    )
 
     class Meta:
-        unique_together = ('version', 'provider')
+        unique_together = ('version', 'provider', 'architecture')
         ordering = ['-date_updated']
 
     def __str__(self):
@@ -324,7 +330,8 @@ class BoxProvider(models.Model):
                 'username': self.owner.username,
                 'box_name': self.box.name,
                 'version': self.version.version,
-                'provider': self.provider
+                'provider': self.provider,
+                'architecture': self.architecture
             }
         )
 

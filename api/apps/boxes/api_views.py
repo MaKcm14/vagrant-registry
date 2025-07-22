@@ -212,7 +212,10 @@ class BoxProviderViewSet(UserBoxMixin, viewsets.ModelViewSet):
         try:
             provider = serializer.save(version=version)
             logger.info('New provider created: {}'.format(provider))
-        except IntegrityError:
+        except IntegrityError as e:
+            #TODO: delete
+            print(str(e))
+
             raise ValidationError({
                 'detail': "Provider '{}' already exists".format(
                     serializer.initial_data['provider']
@@ -238,11 +241,11 @@ class BoxUploadViewSet(UserBoxMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         provider = self.get_box_provider_object()
 
-        if provider.status == BoxProvider.FILLED_IN:
-            raise CustomApiException(
-                detail="Provider already has box file.",
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
+        #if provider.status == BoxProvider.FILLED_IN:
+        #    raise CustomApiException(
+        #        detail="Provider already has box file.",
+        #        status_code=status.HTTP_400_BAD_REQUEST,
+        #    )
         try:
             upload = serializer.save(provider=provider)
         except IntegrityError:
