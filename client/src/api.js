@@ -116,7 +116,7 @@ const boxProviderSchema = new schema.Entity(
     'boxProviders',
     {},
     {
-      idAttribute: 'tag',
+      idAttribute: (value, parent, key) => `${value.tag}-${value.architecture}`,
     },
 );
 const boxProviderSchemaArray = new schema.Array(boxProviderSchema);

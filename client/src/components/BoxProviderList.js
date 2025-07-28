@@ -7,6 +7,19 @@ import ActionIcon from "./ActionIcon";
 
 
 export default class BoxProviderList extends Component {
+  groupProvidersByType = () => {
+    const { providers } = this.props;
+    if (!providers) return {};
+
+    return providers.reduce((acc, provider) => {
+      if (!acc[provider.provider]) {
+        acc[provider.provider] = [];
+      }
+      acc[provider.provider].push(provider);
+      return acc;
+    }, {});
+  };
+
   renderDeleteIcon = (provider) => {
     if (!this.props.canDelete) {
       return null;
@@ -29,17 +42,6 @@ export default class BoxProviderList extends Component {
     />;
   };
 
-  renderDownloadButton = (provider) => {
-    if (!provider.download_url) {
-      return <p>No box file</p>;
-    }
-    return (
-        <a href={provider.download_url} className="btn btn-default">
-          Download box
-        </a>
-    );
-  };
-
   renderSize = (provider) => {
     if (!provider.download_url) {
       return null;
@@ -50,34 +52,53 @@ export default class BoxProviderList extends Component {
   };
 
   renderProvidersList = () => {
-    if (!this.props.providers) {
-      return null;
-    }
+  const groupedProviders = this.groupProvidersByType();
 
-    if (!this.props.providers.length) {
-      return <p className="text-center">No providers</p>;
-    }
+  if (!this.props.providers) return null;
+  if (!this.props.providers.length) return <p className="text-center">No providers</p>;
 
-    return this.props.providers.map(provider => {
-      return (
-          <ListGroupItem
-              key={provider.tag}
-          >
-            <h4 className="list-group-item-heading">
-              {provider.provider} |&nbsp;
-              <small title={Moment(provider.date_updated).format('LLL')}>
-                Last updated: {Moment(provider.date_updated).fromNow()}
-              </small>
-              <div className="pull-right">
-                {this.renderEditIcon(provider)}
-                {this.renderDeleteIcon(provider)}
-              </div>
-            </h4>
-            {this.renderSize(provider)}
-            {this.renderDownloadButton(provider)}
-          </ListGroupItem>
-      );
-    });
+  return Object.entries(groupedProviders).map(([providerName, archProviders]) => (
+    <ListGroupItem key={`${providerName}-${archProviders}`}>
+      <h4 className="list-group-item-heading">
+        {providerName}
+        <div className="pull-right">
+          {this.renderEditIcon(archProviders[0])}
+          {this.renderDeleteIcon(archProviders[0])}
+        </div>
+      </h4>
+      
+      <div className="architectures-list" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        {archProviders.map(provider => (
+          <div key={provider.architecture} className="arch-item">
+            <a 
+              href={provider.download_url} 
+              className="btn btn-default btn-sm download-btn" 
+              style={{
+                display: 'inline-block', 
+                width: '100px', 
+                height: '40px', 
+                textAlign: 'center', 
+                lineHeight: '0px',
+                padding: '19px 0px 0px 0px',
+                fontSize: '15px',
+                fontWeight: 'bold',
+                borderBottom: '2px solid #ccc',
+                borderRadius: "5px",
+              }}
+            >
+              {provider.architecture}
+            </a>
+            <span className="file-size" style={{ 
+                marginLeft: '15px',
+              }}>
+              Size: 
+              {Filesize(provider.file_size)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </ListGroupItem>
+  ));
   };
 
   renderNewButton = () => {
