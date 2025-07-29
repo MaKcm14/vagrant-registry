@@ -38,7 +38,7 @@ export default class BoxProviderList extends Component {
     return <ActionIcon
         icon="edit"
         title="Edit provider"
-        onClick={this.props.onEdit.bind(null, provider.provider)}
+        onClick={this.props.onEdit.bind(null, provider.provider, provider.architecture)}
     />;
   };
 

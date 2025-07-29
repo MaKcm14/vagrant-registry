@@ -43,6 +43,7 @@ class BoxProviderEditPage extends Component {
         this.props.boxTag,
         this.props.params.version,
         this.props.params.provider,
+        this.props.params.architecture,
         merge({}, this.props.form.data, {file: this.state.file})
     );
   };

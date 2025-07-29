@@ -28,10 +28,10 @@ class BoxVersionDetailPage extends Component {
     }
   };
 
-  onBoxProviderEdit = (provider, e) => {
+  onBoxProviderEdit = (provider, architecture, e) => {
     e.preventDefault();
     this.props.router.push(
-        `/boxes/${this.props.boxTag}/versions/${this.props.params.version}/providers/${provider}/edit/`
+        `/boxes/${this.props.boxTag}/versions/${this.props.params.version}/providers/${provider}/architecture/${architecture}/edit/`
     );
   };
 

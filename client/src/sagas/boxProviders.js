@@ -146,6 +146,7 @@ export function* watchCreateBoxProvider() {
 export function* watchEditBoxProvider() {
   yield takeLatest(actionTypes.EDIT_BOX_PROVIDER, function* ({tag, version, provider, architecture, data}) {
     yield put(actions.form.setPending('boxProvider', true));
+
     const { response, error } = yield call(editBoxProvider, {tag, version, provider, architecture, data});
 
     if (error) {
@@ -153,7 +154,7 @@ export function* watchEditBoxProvider() {
       yield put(actions.form.setPending('boxProvider', false));
     } else if (response) {
       if (data.file) {
-        yield call(uploadBoxFile, {tag, version, provider, architecture, data});
+        yield call(uploadBoxFile, {tag, version, provider: data.provider, architecture: data.architecture, data});
       } else {
         yield put(actions.form.reset('boxProvider'));
         browserHistory.push(`/boxes/${tag}/versions/${version}/`);
