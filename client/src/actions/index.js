@@ -51,9 +51,9 @@ export const editBoxProvider = (tag, version, provider, data) => action(
     types.EDIT_BOX_PROVIDER,
     { tag, version, provider, data }
 );
-export const deleteBoxProvider = (tag, version, provider) => action(
+export const deleteBoxProvider = (tag, version, provider, architecture) => action(
     types.DELETE_BOX_PROVIDER,
-    { tag, version, provider }
+    { tag, version, provider, architecture }
 );
 
 export const user = {

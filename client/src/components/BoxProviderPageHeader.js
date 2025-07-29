@@ -13,11 +13,12 @@ class BoxProviderPageHeader extends Component {
   onProviderDelete = (e) => {
     e.preventDefault();
     // TODO: would be good to use custom Confirm dialog
-    if (window.confirm(`Are you sure you want to delete box provider ${this.props.providerTag}?`)) {
+    if (window.confirm(`Are you sure you want to delete box provider ${this.props.providerTag} for ${this.props.router.params.architecture} arch?`)) {
       this.props.deleteBoxProvider(
           this.props.boxTag,
           this.props.router.params.version,
-          this.props.router.params.provider
+          this.props.router.params.provider,
+          this.props.router.params.architecture
       );
     }
   };

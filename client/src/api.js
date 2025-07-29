@@ -205,32 +205,31 @@ export const editBoxVersion = ({data, tag, version}) => patchApi(
 export const deleteBoxVersion = ({tag, version}) => deleteApi(
     `boxes/${tag}/versions/${version}/`
 );
-
 export const createBoxProvider = ({data, tag, version}) => postApi(
     `boxes/${tag}/versions/${version}/providers/`,
     boxProviderSchema,
     data
 );
-export const editBoxProvider = ({data, tag, version, provider}) => patchApi(
-    `boxes/${tag}/versions/${version}/providers/${provider}/`,
+export const editBoxProvider = ({data, tag, version, provider, architecture}) => patchApi(
+    `boxes/${tag}/versions/${version}/providers/${provider}/architecture/${architecture}/`,
     boxProviderSchema,
     data
 );
-export const deleteBoxProvider = ({tag, version, provider}) => deleteApi(
-    `boxes/${tag}/versions/${version}/providers/${provider}/`
+export const deleteBoxProvider = ({tag, version, provider, architecture}) => deleteApi(
+    `boxes/${tag}/versions/${version}/providers/${provider}/architecture/${architecture}/`
 );
 
-export const fetchBoxUpload = ({ tag, version, provider, upload }) => getApi(
-    `boxes/${tag}/versions/${version}/providers/${provider}/uploads/${upload}/`
+export const fetchBoxUpload = ({ tag, version, provider, upload, architecture}) => getApi(
+    `boxes/${tag}/versions/${version}/providers/${provider}/architecture/${architecture}/uploads/${upload}/`
 );
-export const createBoxUpload = ({ tag, version, provider, data }) => postApi(
-    `boxes/${tag}/versions/${version}/providers/${provider}/uploads/`,
+export const createBoxUpload = ({ tag, version, provider, data, architecture }) => postApi(
+    `boxes/${tag}/versions/${version}/providers/${provider}/architecture/${architecture}/uploads/`,
     null,
     data
 );
-export const uploadBoxChunk = ({ tag, version, provider, upload, data, range }) => {
+export const uploadBoxChunk = ({ tag, version, provider, upload, data, range, architecture }) => {
   return callApi({
-    endpoint: `boxes/${tag}/versions/${version}/providers/${provider}/uploads/${upload}/`,
+    endpoint: `boxes/${tag}/versions/${version}/providers/${provider}/architecture/${architecture}/uploads/${upload}/`,
     method: 'PUT',
     postData: data,
     contentType: 'application/octet-stream',

@@ -27,7 +27,7 @@ export default class BoxProviderList extends Component {
     return <ActionIcon
         icon="trash"
         title="Delete provider"
-        onClick={this.props.onDelete.bind(null, provider.provider)}
+        onClick={this.props.onDelete.bind(null, provider.provider, provider.architecture)}
     />;
   };
 
@@ -61,10 +61,6 @@ export default class BoxProviderList extends Component {
     <ListGroupItem key={`${providerName}-${archProviders}`}>
       <h4 className="list-group-item-heading">
         {providerName}
-        <div className="pull-right">
-          {this.renderEditIcon(archProviders[0])}
-          {this.renderDeleteIcon(archProviders[0])}
-        </div>
       </h4>
       
       <div className="architectures-list" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -94,6 +90,10 @@ export default class BoxProviderList extends Component {
               Size: 
               {Filesize(provider.file_size)}
             </span>
+            <div className="pull-right">
+              {this.renderEditIcon(archProviders[0])}
+              {this.renderDeleteIcon(archProviders[0])}
+            </div>
           </div>
         ))}
       </div>

@@ -20,11 +20,11 @@ class BoxVersionDetailPage extends Component {
     this.props.fetchBoxVersion(this.props.boxTag, this.props.params.version);
   }
 
-  onBoxProviderDelete = (provider, e) => {
+  onBoxProviderDelete = (provider, architecture, e) => {
     e.preventDefault();
     // TODO: would be good to use custom Confirm dialog
-    if (window.confirm(`Are you sure you want to delete box provider ${this.props.versionTag} ${provider}?`)) {
-      this.props.deleteBoxProvider(this.props.boxTag, this.props.version, provider);
+    if (window.confirm(`Are you sure you want to delete box provider ${this.props.versionTag} ${provider} for ${architecture} architecture?`)) {
+      this.props.deleteBoxProvider(this.props.boxTag, this.props.routeParams.version, provider, architecture);
     }
   };
 

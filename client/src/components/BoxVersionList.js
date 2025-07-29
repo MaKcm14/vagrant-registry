@@ -48,8 +48,16 @@ class BoxVersionList extends Component {
   };
 
   renderProviders = (version) => {
+    let set = new Set();
+
     return version.providers.map((providerTag) => {
       const provider = this.props.boxProviders[providerTag];
+
+      if (set.has(provider.provider)) {
+        return (<span></span>);
+      }
+      set.add(provider.provider);
+
       return (
           <span key={providerTag} >
             <Label bsStyle="primary">
