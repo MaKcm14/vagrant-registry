@@ -58,7 +58,7 @@ class BoxProviderPageHeader extends Component {
     return (
         <div className="page-header">
           <h1>
-            <span>{this.props.providerTag}</span>
+            <span>{`${this.props.providerTag}`}</span>
             {' '}
             {this.renderPrivateLabel()}
             {' '}

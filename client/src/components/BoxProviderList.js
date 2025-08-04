@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {ListGroupItem} from "react-bootstrap";
-import Moment from "moment";
 import Filesize from "filesize";
 import {Link} from "react-router";
 import ActionIcon from "./ActionIcon";
