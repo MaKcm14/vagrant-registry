@@ -65,6 +65,8 @@ class Migration(migrations.Migration):
                 ('checksum', models.CharField(max_length=128)),
                 ('pulls', models.PositiveIntegerField(default=0)),
                 ('status', models.CharField(choices=[('EM', 'Empty'), ('FI', 'Filled in')], default='EM', max_length=2)),
+                ('architecture', models.CharField(max_length=100)),
+                ('default_architecture', models.BooleanField(null=False, default=False))
             ],
             options={
                 'ordering': ['-date_updated'],
@@ -122,7 +124,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='boxprovider',
-            unique_together=set([('version', 'provider')]),
+            unique_together=set([('version', 'provider', 'architecture')]),
         ),
         migrations.AlterUniqueTogether(
             name='boxmember',

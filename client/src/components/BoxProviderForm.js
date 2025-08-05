@@ -16,6 +16,11 @@ class BoxProviderForm extends Component {
               type='text'
               label='Provider *'
           />
+          <MyFormField
+              model='boxProvider.architecture'
+              type='text'
+              label='Architecture *'
+          />
           <BoxFileFormField
               model='boxProvider.file'
               label='Box file'

@@ -112,3 +112,8 @@ ENV/
 /client/npm-debug.log*
 /client/yarn-debug.log*
 /client/yarn-error.log*
+
+# Others
+TODO.txt
+test_check_list.txt
+deploy.ps1

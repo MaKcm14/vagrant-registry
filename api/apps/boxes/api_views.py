@@ -81,7 +81,10 @@ class UserBoxMixin:
     def get_box_provider_object(self):
         return get_object_or_404(
             self.get_box_version_object().providers.all(),
-            **{'provider': self.kwargs['provider']}
+            **{
+                'provider': self.kwargs['provider'],
+                'architecture': self.kwargs['architecture']
+            }
         )
 
     def get_box_queryset(self):
@@ -198,24 +201,42 @@ class BoxProviderViewSet(UserBoxMixin, viewsets.ModelViewSet):
     permission_classes = (BoxProviderPermissions, )
     queryset = BoxProvider.objects.none()
     serializer_class = BoxProviderSerializer
-    lookup_field = 'provider'
-    lookup_url_kwarg = 'provider'
+    #lookup_field = 'provider'
+    #lookup_url_kwarg = 'provider'
     ordering_fields = ('pulls', 'date_updated', )
     search_fields = ('=provider', )
 
     def get_queryset(self):
         return self.get_box_version_object().providers.all()\
             .order_by('-date_updated')
+    
+    
+    def get_object(self):
+        return get_object_or_404(
+            self.get_queryset(),
+            **{
+                'provider': self.kwargs['provider'],
+                'architecture': self.kwargs['architecture']
+            }
+        )
+
 
     def perform_create(self, serializer):
+        default_arch = True
         version = self.get_box_version_object()
+
+        for item in version.providers.all():
+            if item.provider == serializer.initial_data['provider']:
+                default_arch = False
+
         try:
-            provider = serializer.save(version=version)
-            logger.info('New provider created: {}'.format(provider))
-        except IntegrityError:
+            provider = serializer.save(version=version, default_architecture=default_arch)
+            logger.info('New provider created (provider.arch): {}.{}'.format(provider, provider.architecture))
+        except IntegrityError as e:
             raise ValidationError({
-                'detail': "Provider '{}' already exists".format(
-                    serializer.initial_data['provider']
+                'detail': "Provider '{}' with arch '{}' already exists".format(
+                    serializer.initial_data['provider'],
+                    serializer.initial_data['architecture']
                 )
             })
 
@@ -239,10 +260,10 @@ class BoxUploadViewSet(UserBoxMixin, viewsets.ModelViewSet):
         provider = self.get_box_provider_object()
 
         if provider.status == BoxProvider.FILLED_IN:
-            raise CustomApiException(
-                detail="Provider already has box file.",
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
+           raise CustomApiException(
+               detail="Provider already has box file.",
+               status_code=status.HTTP_400_BAD_REQUEST,
+           )
         try:
             upload = serializer.save(provider=provider)
         except IntegrityError:

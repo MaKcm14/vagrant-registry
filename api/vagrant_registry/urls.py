@@ -95,14 +95,16 @@ api_v1_urlpatterns = [
         r'(?P<version>\d+\.\d+\.\d+)/providers/$',
         box_provider_list, name='boxprovider-list'),
     url(r'^boxes/(?P<username>[\w.@+-]+)/(?P<box_name>[\w.@+-]+)/versions/'
-        r'(?P<version>\d+\.\d+\.\d+)/providers/(?P<provider>[\w.@+-]+)/$',
+        r'(?P<version>\d+\.\d+\.\d+)/providers/(?P<provider>[\w.@+-]+)/architecture/(?P<architecture>[\w.@+-]+)/$',
         box_provider_detail, name='boxprovider-detail'),
     url(r'^boxes/(?P<username>[\w.@+-]+)/(?P<box_name>[\w.@+-]+)/versions/'
         r'(?P<version>\d+\.\d+\.\d+)/providers/(?P<provider>[\w.@+-]+)/'
+        r'architecture/(?P<architecture>[\w.@+-]+)/'
         r'uploads/$',
         box_upload_list, name='boxupload-list'),
     url(r'^boxes/(?P<username>[\w.@+-]+)/(?P<box_name>[\w.@+-]+)/versions/'
         r'(?P<version>\d+\.\d+\.\d+)/providers/(?P<provider>[\w.@+-]+)/'
+        r'architecture/(?P<architecture>[\w.@+-]+)/'
         r'uploads/(?P<checksum>.+)/$',
         box_upload_detail, name='boxupload-detail'),
     url(r'^auth/', include('rest_framework.urls')),
@@ -123,7 +125,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^downloads/boxes/(?P<username>[\w.@+-]+)/(?P<box_name>[\w.@+-]+)/'
         r'(?P<version>\d+\.\d+\.\d+)/'
-        r'(?P<provider>[\w.@+-]+).box',
+        r'(?P<provider>[\w.@+-]+)/'
+        r'(?P<architecture>[\w.@+-]+).box',
         DownloadBoxView.as_view({'get': 'get'}), name='downloads-box'),
     url(r'^box-metadata/(?P<username>[\w.@+-]+)/(?P<box_name>[\w.@+-]+)/$',
         box_metadata_detail, name='box-metadata'),

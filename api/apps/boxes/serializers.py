@@ -32,7 +32,8 @@ class BoxProviderSerializer(serializers.ModelSerializer):
             'owner.username': 'username',
             'version.box.name': 'box_name',
             'version.version': 'version',
-            'provider': 'provider'
+            'provider': 'provider',
+            'architecture': 'architecture'
         }
     )
     download_url = serializers.SerializerMethodField()
@@ -41,7 +42,7 @@ class BoxProviderSerializer(serializers.ModelSerializer):
         model = BoxProvider
         fields = ('url', 'tag', 'provider', 'date_created', 'date_modified',
                   'date_updated', 'checksum_type', 'checksum',
-                  'download_url', 'file_size', 'pulls', 'status')
+                  'download_url', 'file_size', 'pulls', 'status', 'architecture','default_architecture')
 
     def get_download_url(self, obj):
         if obj.status == BoxProvider.FILLED_IN:
@@ -129,7 +130,7 @@ class BoxProviderMetadataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BoxProvider
-        fields = ('name', 'url', 'checksum_type', 'checksum',)
+        fields = ('name', 'url', 'checksum_type', 'checksum', 'architecture', 'default_architecture',)
 
     def get_download_url(self, obj):
         return self.context.get('request').build_absolute_uri(obj.download_url)
@@ -162,6 +163,7 @@ class BoxUploadSerializer(serializers.ModelSerializer):
             'box.name': 'box_name',
             'version.version': 'version',
             'provider.provider': 'provider',
+            'provider.architecture': 'architecture',
             'checksum': 'checksum',
         }
     )

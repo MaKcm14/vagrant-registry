@@ -47,13 +47,13 @@ export const createBoxProvider = (tag, version, data) => action(
     types.CREATE_BOX_PROVIDER,
     { tag, version, data }
 );
-export const editBoxProvider = (tag, version, provider, data) => action(
+export const editBoxProvider = (tag, version, provider, architecture, data) => action(
     types.EDIT_BOX_PROVIDER,
-    { tag, version, provider, data }
+    { tag, version, provider, architecture, data}
 );
-export const deleteBoxProvider = (tag, version, provider) => action(
+export const deleteBoxProvider = (tag, version, provider, architecture) => action(
     types.DELETE_BOX_PROVIDER,
-    { tag, version, provider }
+    { tag, version, provider, architecture }
 );
 
 export const user = {

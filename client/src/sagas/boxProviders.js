@@ -12,7 +12,7 @@ const editBoxProvider = callRequest.bind(null, actions.boxProvider.edit, api.edi
 const deleteBoxProvider = callRequest.bind(null, actions.boxProvider.delete, api.deleteBoxProvider);
 
 
-function* uploadChunks({file, offset, tag, version, provider, upload}) {
+function* uploadChunks({file, offset, tag, version, provider, upload, architecture}) {
   const totalSize = file.size;
   const chunkSize = 5242880;  // 5MB
   let numberOfErrors = 0;
@@ -34,7 +34,8 @@ function* uploadChunks({file, offset, tag, version, provider, upload}) {
         start: loaded,
         end: loaded + dataSize,
         total: totalSize,
-      }
+      },
+      architecture
     });
 
     if (resp.response) {
@@ -60,7 +61,7 @@ function* uploadChunks({file, offset, tag, version, provider, upload}) {
   }
 }
 
-function* uploadBoxFile({tag, version, provider, data}) {
+function* uploadBoxFile({tag, version, provider, architecture, data}) {
   yield put(actions.form.updateData(
       'boxProvider',
       { uploadStatus: 'Computing file hash...' }
@@ -74,7 +75,7 @@ function* uploadBoxFile({tag, version, provider, data}) {
 
   let boxUploadResp = yield call(
       api.fetchBoxUpload,
-      {tag, version, provider, upload: hash}
+      {tag, version, provider, upload: hash, architecture}
   );
 
   if (boxUploadResp.status === 404) {
@@ -85,7 +86,7 @@ function* uploadBoxFile({tag, version, provider, data}) {
     };
     boxUploadResp = yield call(
         api.createBoxUpload,
-        {tag, version, provider, data: uploadData}
+        {tag, version, provider, data: uploadData, architecture}
     );
   }
 
@@ -107,6 +108,7 @@ function* uploadBoxFile({tag, version, provider, data}) {
       upload: hash,
       file: data.file,
       offset: boxUploadResp.response.offset,
+      architecture
     });
   } catch (error) {
     yield put(actions.form.setErrors('boxProvider', error));
@@ -132,7 +134,7 @@ export function* watchCreateBoxProvider() {
       yield put(actions.form.setPending('boxProvider', false));
     } else if (response) {
       if (data.file) {
-        yield call(uploadBoxFile, {tag, version, provider: data.provider, data});
+        yield call(uploadBoxFile, {tag, version, provider: data.provider, architecture: data.architecture, data});
       } else {
         yield put(actions.form.reset('boxProvider'));
         browserHistory.push(`/boxes/${tag}/versions/${version}/`);
@@ -142,16 +144,17 @@ export function* watchCreateBoxProvider() {
 }
 
 export function* watchEditBoxProvider() {
-  yield takeLatest(actionTypes.EDIT_BOX_PROVIDER, function* ({tag, version, provider, data}) {
+  yield takeLatest(actionTypes.EDIT_BOX_PROVIDER, function* ({tag, version, provider, architecture, data}) {
     yield put(actions.form.setPending('boxProvider', true));
-    const { response, error } = yield call(editBoxProvider, {tag, version, provider, data});
+
+    const { response, error } = yield call(editBoxProvider, {tag, version, provider, architecture, data});
 
     if (error) {
       yield put(actions.form.setErrors('boxProvider', error));
       yield put(actions.form.setPending('boxProvider', false));
     } else if (response) {
       if (data.file) {
-        yield call(uploadBoxFile, {tag, version, provider, data});
+        yield call(uploadBoxFile, {tag, version, provider: data.provider, architecture: data.architecture, data});
       } else {
         yield put(actions.form.reset('boxProvider'));
         browserHistory.push(`/boxes/${tag}/versions/${version}/`);
@@ -161,8 +164,8 @@ export function* watchEditBoxProvider() {
 }
 
 export function* watchDeleteBoxProvider() {
-  yield takeLatest(actionTypes.DELETE_BOX_PROVIDER, function* ({tag, version, provider}) {
-    const { response } = yield call(deleteBoxProvider, {tag, version, provider});
+  yield takeLatest(actionTypes.DELETE_BOX_PROVIDER, function* ({tag, version, provider, architecture}) {
+    const { response } = yield call(deleteBoxProvider, {tag, version, provider, architecture});
 
     if (response) {
       yield put(actions.loadBoxVersion(tag, version));
