@@ -116,3 +116,4 @@ ENV/
 # Others
 TODO.txt
 test_check_list.txt
+deploy.ps1

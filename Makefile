@@ -16,7 +16,6 @@ install_client:
 	docker-compose run client yarn --frozen-lockfile
 
 migrate:
-	# docker-compose run --name api-start api sh -c "python manage.py makemigrations && python manage.py migrate"
 	docker-compose run api python manage.py migrate
 
 create_superuser:

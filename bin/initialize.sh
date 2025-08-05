@@ -17,5 +17,5 @@ create_user+="psql $DB_NAME -c 'grant all privileges on database $DB_NAME to $DB
 create_user+="psql $DB_NAME -c 'alter schema public owner to $DB_USER;')"
 su postgres -c "$create_user" || true
 
-python3 manage.py migrate
-python3 manage.py collectstatic --no-input
+python3 /code/api/manage.py migrate
+python3 /code/api/manage.py collectstatic --no-input
