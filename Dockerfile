@@ -28,7 +28,7 @@ RUN mkdir -p /logs/nginx /logs/supervisord /logs/gunicorn /logs/django
 
 RUN cp conf/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-EXPOSE 80
+EXPOSE 443
 
 # Correct the PG error: could not open temporary statistics file "/var/run/postgresql/9.5-main.pg_stat_tmp/global.tmp": No such file or directory
 RUN mkdir -p /var/run/postgresql/10-main.pg_stat_tmp
@@ -37,6 +37,5 @@ RUN chown postgres.postgres /var/run/postgresql/10-main.pg_stat_tmp -R
 # Configure Nginx
 RUN ln -s /code/conf/nginx.conf /etc/nginx/sites-enabled/vagrant_registry
 RUN rm /etc/nginx/sites-enabled/default
-
 
 CMD ["/usr/bin/supervisord"]
