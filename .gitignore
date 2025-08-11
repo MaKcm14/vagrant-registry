@@ -113,6 +113,11 @@ ENV/
 /client/yarn-debug.log*
 /client/yarn-error.log*
 
+# CA
+/conf/certificate/create_certificate_for_domain.sh
+/conf/certificate/rootCA*
+/conf/certificate/v3.ext
+
 # Others
 TODO.txt
 test_check_list.txt
